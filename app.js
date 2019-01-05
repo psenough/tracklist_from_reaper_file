@@ -8,12 +8,9 @@ let obj = [];
 
 fs.readFile(reaper_file, 'utf8', function(err, data) {
   if (err) throw err;
-  //console.log(data);
   var lines = data.split(/\r?\n/);
-
-	let counter = 0;
-	async.eachSeries(lines, function iteratee(val, callback) {
-		//console.log(val);
+  let counter = 0;
+  async.eachSeries(lines, function iteratee(val, callback) {
 		if (val == '    <ITEM') {
 			//console.log(val);
 			var position = lines[counter+1].substr(15);
@@ -30,9 +27,7 @@ fs.readFile(reaper_file, 'utf8', function(err, data) {
 			})
 		} else {
 			if (val == ">") {
-				//console.log(obj.length);
 				obj.sort(function(a,b){ return a["position"].localeCompare(b["position"]); });
-				//console.log(obj);
 				for (var i=0; i<obj.length; i++){
 					var fnumber = ("0" + (i+1)).slice(-2);
 					//console.log(fnumber + ') ' + obj[i].artist + ' - ' + obj[i].track + ' ['+obj[i].position+'] (' + obj[i].album + ')');
@@ -44,24 +39,7 @@ fs.readFile(reaper_file, 'utf8', function(err, data) {
 				callback();
 			}
 		}
-	});
-	
-	//console.log(obj.length);
-	
-  /*
-  for (var i = 0; i < lines.length; i++) { 
-		if (lines[i] == '    <ITEM') {
-
-			var position = lines[i+1].substr(15);
-			console.log(position);
-			let thisvalue = position;
-			var filename = lines[i+19].substr(14);
-			var file = filename.substr(0,filename.length-3);
-			console.log(file);
-			NodeID3.read(file, function(err, tags) { if (tags != undefined) console.log(tags.artist + ' - ' + tags.title + ' [' + thisvalue.toHHMMSS() + ']'); })
-			//obj.push({"position": position, "artist": artist, "track": track, "album": album});
-		}
-  }*/
+  });
 });
 
 String.prototype.toHHMMSS = function () {
